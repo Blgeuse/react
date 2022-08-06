@@ -26,15 +26,20 @@ const Counter = () => {
     })
   }
 
+  const renderTags = () => {
+    if (tags.length === 0) return 'no Tags'
+    return tags.map(tag =>
+      (<li
+        className='btn btn-primary btn-sm m-2'
+        onClick={() => handleTagChange(tag)}
+        key={tag}
+      >{tag}</li>))
+  }
+
   return (
     <>
       <ul>
-        {tags.map(tag =>
-          (<li
-            className='btn btn-primary btn-sm m-2'
-            onClick={() => handleTagChange(tag)}
-            key={tag}
-          >{tag}</li>))}
+        {renderTags()}
       </ul>
       <span className={getBageClasses()}>{formatCount}</span>
       <button
