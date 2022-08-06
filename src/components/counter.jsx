@@ -19,8 +19,11 @@ const Counter = () => {
   const handleDecrement = () => {
     setCounter(counter - 1);
   }
-  const handleTagChange = () => {
-    setTags()
+  const handleTagChange = (deleteTag) => {
+    console.log(deleteTag);
+    setTags((prevState) => {
+      return prevState.filter(tag => tag !== deleteTag)
+    })
   }
 
   return (
@@ -28,10 +31,10 @@ const Counter = () => {
       <ul>
         {tags.map(tag =>
           (<li
-            className='btm btm-primary btm-sm m-2'
-            onclick={handleTagChange}
+            className='btn btn-primary btn-sm m-2'
+            onClick={() => handleTagChange(tag)}
             key={tag}
-          >tag</li>))}
+          >{tag}</li>))}
       </ul>
       <span className={getBageClasses()}>{formatCount}</span>
       <button
