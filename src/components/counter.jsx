@@ -1,56 +1,54 @@
 import React,{useState} from 'react';
+import api from '../api/index'
+const Users = () => {
+  const [users, setUsers] = useState(api.users.fetchAll());
+  const [counter, setCounter] = useState(users.length);
 
-const Counter = () => {
-  const [counter, setCounter] = useState(0);
-  const [tags, setTags] = useState(['tag1', 'tag2', 'tag3']);
-
-
-  const formatCount = counter === 0 ? 'empty': counter;
-
-  const getBageClasses = () => {
-    let classes = "badge m-2 ";
-    classes += counter === 0 ? "bg-warning" : "bg-primary";
-    return classes;
-  };
-
-  const handleIncrement = () => {
-    setCounter(counter + 1);
+  const badgeColor = (color) => {
+    return `m-1 badge bg-${color}`
   }
-  const handleDecrement = () => {
+
+  const deleteUser = (id) => {
+    setUsers(users.filter(user => user._id !== id));
     setCounter(counter - 1);
   }
-  const handleTagChange = (deleteTag) => {
-    console.log(deleteTag);
-    setTags((prevState) => {
-      return prevState.filter(tag => tag !== deleteTag)
-    })
-  }
-
-  const renderTags = () => {
-    if (tags.length === 0) return 'no Tags'
-    return tags.map(tag =>
-      (<li
-        className='btn btn-primary btn-sm m-2'
-        onClick={() => handleTagChange(tag)}
-        key={tag}
-      >{tag}</li>))
-  }
-
   return (
-    <>
-      <ul>
-        {renderTags()}
-      </ul>
-      <span className={getBageClasses()}>{formatCount}</span>
-      <button
-        className='btn btn-primary btn-sm m-2'
-        onClick={handleIncrement}
-      >+</button>
-      <button
-        className='btn btn-primary btn-sm m-2'
-        onClick={handleDecrement}
-      >-</button>
-    </>);
+  <><h2>{counter}</h2>
+  <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Имя</th>
+          <th scope="col">Качество</th>
+          <th scope="col">Профессия</th>
+          <th scope="col">Встретился, раз</th>
+          <th scope="col">Оценка</th>
+        </tr>
+      </thead>
+      <tbody>
+        {users.map(user => {
+          return (
+            <tr key={user._id}>
+              <td>{user.name}</td>
+              <td>
+                {user.qualities.map(qualiti => {
+                  return (
+                    <span className={badgeColor(qualiti.color)}>{qualiti.name}</span>
+                  );
+                })}
+              </td>
+              <td>{user.profession.name}</td>
+              <td>{user.completedMeetings}</td>
+              <td>{user.rate}/5</td>
+              <td>
+                <button
+                  onClick={() => deleteUser(user._id)}
+                  className='btn btn-danger'
+                >delete</button>
+              </td>
+            </tr>);
+        })}
+      </tbody>
+    </table></>)
 }
 
-export default Counter;
+export default Users;
